@@ -67,9 +67,10 @@ Create and layout the widgets
         self.button6 = buttons.GenToggleButton(self, size=size, name="btn6")
         self.button7 = buttons.GenToggleButton(self, size=size, name="btn7")
         self.button8 = buttons.GenToggleButton(self, size=size, name="btn8")
-        self.button9 = buttons.GenToggleButton(self, size=size, name="btn9")
+        self.button9 = wx.BitmapButton(self, wx.ID_ANY, self.contbmp, pos=(150,300), style=wx.NO_BORDER)
         self.normalBtnColour = self.button1.GetBackgroundColour()
         
+
         self.widgets = [self.button1, self.button2, self.button3,
                         self.button4, self.button5, self.button6,
                         self.button7, self.button8, self.button9]

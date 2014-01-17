@@ -6,6 +6,7 @@ Project: Tic Tac Toe GUI made in WxPython.
 """
 import wx
 import wx.lib.buttons as buttons
+from wx.lib.wordwrap import wordwrap
 import random
 
 class GamePanel(wx.Panel):
@@ -52,27 +53,35 @@ class GamePanel(wx.Panel):
     #---------------------------------------------------------------------------
     def createFont(self):
         """ Create fonts to be used """
-        self.btn_font = wx.Font(22, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL,
-                       wx.FONTWEIGHT_BOLD)
+        self.btn_font = wx.Font(13, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL,
+                       wx.FONTWEIGHT_NORMAL)
         self.score_font = wx.Font(14, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL,
                        wx.FONTWEIGHT_BOLD)
     #---------------------------------------------------------------------------
     def createButtons(self):
         """ Create buttons to be used in game """
         # Crate grid sizer for buttons
-        self.btn_sizer = wx.GridSizer(rows=3, cols=3, vgap=5, hgap=5)
+        self.btn_sizer = wx.GridSizer(rows=3, cols=3, vgap=0, hgap=0)
         
         # Create buttons for game
-        self.btn1 = buttons.GenToggleButton(self,size=(100,100))
-        self.btn2 = buttons.GenToggleButton(self,size=(100,100))
-        self.btn3 = buttons.GenToggleButton(self,size=(100,100))
-        self.btn4 = buttons.GenToggleButton(self,size=(100,100))
-        self.btn5 = buttons.GenToggleButton(self,size=(100,100))
-        self.btn6 = buttons.GenToggleButton(self,size=(100,100))
-        self.btn7 = buttons.GenToggleButton(self,size=(100,100))
-        self.btn8 = buttons.GenToggleButton(self,size=(100,100))
-        self.btn9 = buttons.GenToggleButton(self,size=(100,100))
+        size = (200,200)
+        self.btn1 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER|wx.ALIGN_CENTRE)
+        self.btn2 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER)
+        self.btn3 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER)
+        self.btn4 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER)
+        self.btn5 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER)
+        self.btn6 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER)
+        self.btn7 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER)
+        self.btn8 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER)
+        self.btn9 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER)
+        #self.btn9 = wx.Button(self, id=wx.ID_ANY, label="test", size=size, style=wx.NO_BORDER)
+        #self.btn9 = wx.BitmapButton(self, wx.ID_ANY, self.contbmp, pos=(150,300), style=wx.NO_BORDER)
         
+        #self.btn1.SetBackgroundColour("Blue")
+
+        txt = "I'm as clever as you."
+        wrapped_txt = wordwrap(txt, 200, wx.ClientDC(self))
+        self.btn1.SetLabel(wrapped_txt)
         # Get normal button color
         self.normal_btn_color = self.btn1.GetBackgroundColour()
         
@@ -81,6 +90,8 @@ class GamePanel(wx.Panel):
                          self.btn4, self.btn5, self.btn6,
                          self.btn7, self.btn8, self.btn9]
                         
+
+
                          # Horizontal Wins
         self.btn_wins = [(self.btn1, self.btn2, self.btn3),
                          (self.btn4, self.btn5, self.btn6),
@@ -96,6 +107,7 @@ class GamePanel(wx.Panel):
         # Add buttons to btn_sizer and set font for each button
         for btn in self.btn_list:
             btn.SetFont(self.btn_font)
+            btn.setBackgroundColor("#9aeafe")
             self.btn_sizer.Add(btn)
             self.Bind(wx.EVT_BUTTON, self.onToggle, btn)
     
@@ -129,9 +141,11 @@ class GamePanel(wx.Panel):
         """ When a button is pressed mark it with X or O """
         btn = event.GetEventObject()
         if self.isPlayerX:
-            btn.SetLabel("X")
+            txt = "I'm as clever as you."
+            wrapped_txt = txt #wordwrap(txt, 100, wx.ClientDC(self))
+            btn.SetLabel(wrapped_txt)
         else:
-            btn.SetLabel("O")
+            btn.SetLabel("Niemand hat die Absicht eine lange grosse Mauer zu errichten. Echt.")
         btn.Disable()
         # If player won then end method
         if self.checkWin():
