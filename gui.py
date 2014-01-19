@@ -1,5 +1,6 @@
 import wx
 from wx.lib.buttons import GenBitmapTextButton
+from wx.lib.fancytext import RenderToBitmap as fancy_render
 
 class Gui(wx.App):
   """ A simple wxpython app """
@@ -40,21 +41,36 @@ class MainPanel(wx.Panel):
     self.btn_font = wx.Font(14, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL,
                    wx.FONTWEIGHT_NORMAL)
 
+  def render(self, txt, word=None):
+    if word:
+      highlight = "<font style='italic' weight='bold' color='red' family='swiss'>" + word + "</font>"
+      txt = txt.replace(word, highlight)
+    return fancy_render(txt)
+
+  def question_button(self, txt, word, size=(200,200)):
+    btn = GenBitmapTextButton(self, bitmap=self.render(txt, word), label="\n", size=size)
+    btn.SetBackgroundColour('#c2e6f8')
+    return btn
+
+  def answer_button(self, txt, size=(200,200)):
+    btn = GenBitmapTextButton(self, bitmap=self.render(txt), label="\n", size=size)
+    btn.SetBackgroundColour('#fcff9c')
+    return btn
+
   def createButtons(self):
     """ Create buttons to be used in game """
     # Create grid sizer for buttons
     self.btn_sizer = wx.GridSizer(rows=3, cols=3, vgap=0, hgap=0)
     
-    # Create buttons for game
+    # Create buttons
     size = (200,200)
-    #email = GenBitmapTextButton(self, 1, wx.Bitmap('yellow.png'), 'Mail', (-100, -100), size)
     # Use bitmap buttons in case we want to add a nice icon later on
-    txt = "I'm as clever as you,\n".center(20) + "but not as clever as my son.".center(20)
-    email = GenBitmapTextButton(self, bitmap=wx.NullBitmap, label=txt,
-                                size=size, style=wx.ALIGN_CENTRE)
-    email.SetBackgroundColour('#c2e6f8')
-    email.SetFont(self.btn_font)
-    self.btn_sizer.Add(email)
+    word = "nice"
+    txt ="Use bitmap buttons in case\n we want to add a\n nice icon later on"
+    q = self.question_button(txt, word)
+    self.btn_sizer.Add(q)
+    a = self.answer_button(txt)
+    self.btn_sizer.Add(a)
     #self.Bind(wx.EVT_BUTTON, self.onToggle, email)
 
     #self.btn1 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER|wx.ALIGN_CENTRE)
