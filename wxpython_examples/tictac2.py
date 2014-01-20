@@ -54,7 +54,7 @@ Create and layout the widgets
 """
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         self.fgSizer = wx.FlexGridSizer(rows=3, cols=3, vgap=5, hgap=5)
-        btnSizer = wx.BoxSizer(wx.HORIZONTAL)
+        #btnSizer = wx.BoxSizer(wx.HORIZONTAL)
         font = wx.Font(22, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL,
                        wx.FONTWEIGHT_BOLD)
         
@@ -67,13 +67,14 @@ Create and layout the widgets
         self.button6 = buttons.GenToggleButton(self, size=size, name="btn6")
         self.button7 = buttons.GenToggleButton(self, size=size, name="btn7")
         self.button8 = buttons.GenToggleButton(self, size=size, name="btn8")
-        self.button9 = wx.BitmapButton(self, wx.ID_ANY, self.contbmp, pos=(150,300), style=wx.NO_BORDER)
+        #self.button9 = buttons.GenToggleButton(self, size=size, name="btn9")
+        #self.button9 = wx.BitmapButton(self, wx.ID_ANY, self.contbmp, pos=(150,300), style=wx.NO_BORDER)
         self.normalBtnColour = self.button1.GetBackgroundColour()
         
 
         self.widgets = [self.button1, self.button2, self.button3,
                         self.button4, self.button5, self.button6,
-                        self.button7, self.button8, self.button9]
+                        self.button7, self.button8]
         
         # change all the main game buttons' font and bind them to an event
         for button in self.widgets:
@@ -96,13 +97,10 @@ Create and layout the widgets
         
         self.methodsToWin = [(self.button1, self.button2, self.button3),
                              (self.button4, self.button5, self.button6),
-                             (self.button7, self.button8, self.button9),
                              # vertical ways to win
                              (self.button1, self.button4, self.button7),
                              (self.button2, self.button5, self.button8),
-                             (self.button3, self.button6, self.button9),
                              # diagonal ways to win
-                             (self.button1, self.button5, self.button9),
                              (self.button3, self.button5, self.button7)]
         
         self.SetSizer(mainSizer)

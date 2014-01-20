@@ -42,6 +42,11 @@ class MainPanel(wx.Panel):
                    wx.FONTWEIGHT_NORMAL)
 
   def render(self, txt, word=None):
+    """
+    Due to a bug in wxpython, multiline labels can not be rendered correctly
+    on buttons. Therfore we roll our own solution, which renders the text as a
+    bitmap.
+    """
     if word:
       highlight = "<font style='italic' weight='bold' color='red' family='swiss'>" + word + "</font>"
       txt = txt.replace(word, highlight)
@@ -60,17 +65,18 @@ class MainPanel(wx.Panel):
   def createButtons(self):
     """ Create buttons to be used in game """
     # Create grid sizer for buttons
-    self.btn_sizer = wx.GridSizer(rows=3, cols=3, vgap=0, hgap=0)
+    self.btn_sizer = wx.GridSizer(rows=4, cols=0, vgap=5, hgap=5)
     
     # Create buttons
     size = (200,200)
     # Use bitmap buttons in case we want to add a nice icon later on
-    word = "nice"
-    txt ="Use bitmap buttons in case\n we want to add a\n nice icon later on"
-    q = self.question_button(txt, word)
-    self.btn_sizer.Add(q)
-    a = self.answer_button(txt)
-    self.btn_sizer.Add(a)
+    cards = []
+    for card in range(8):
+      word = "nice"
+      txt ="Use bitmap buttons in case\n we want to add a\n nice icon later on"
+      cards.append(self.question_button(txt, word))
+      cards.append(self.answer_button(txt))
+    self.btn_sizer.AddMany(cards)
     #self.Bind(wx.EVT_BUTTON, self.onToggle, email)
 
     #self.btn1 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER|wx.ALIGN_CENTRE)

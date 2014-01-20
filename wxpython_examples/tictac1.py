@@ -107,7 +107,7 @@ class GamePanel(wx.Panel):
         # Add buttons to btn_sizer and set font for each button
         for btn in self.btn_list:
             btn.SetFont(self.btn_font)
-            btn.setBackgroundColor("#9aeafe")
+            #btn.setBackgroundColor("#9aeafe")
             self.btn_sizer.Add(btn)
             self.Bind(wx.EVT_BUTTON, self.onToggle, btn)
     
