@@ -14,3 +14,10 @@ Featuring the [most common english words project](https://github.com/first20hour
 I also need a good API to query example sentences for words.
 The first thing that came to mind was Wiktionary, but the API was horrendous.
 Therefore I wrote a scraper for [Vocaboly](http://www.vokaboly.de/bs/index.php) to get example sentences.
+I realize there are many other web resources for english example sentences but
+most of them lack the German translation.
+
+Nevertheless, here's a list of corpora for english sentences, which are easy to
+parse:
+
+[BNC](http://bnc.bl.uk/saraWeb.php?qy=hat)

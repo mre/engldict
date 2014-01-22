@@ -1,1 +1,2 @@
-print '{0: <16#}'.format('Hi')
+en = "Hello, my Name is jim"
+print [w for w in en.split()]
