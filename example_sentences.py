@@ -7,7 +7,8 @@ import urllib2
 #from BeautifulSoup import BeautifulSoup
 # or if you're using BeautifulSoup4:
 from bs4 import BeautifulSoup
-import json
+from string import punctuation
+
 
 
 test_html_doc = """
@@ -29,6 +30,14 @@ test_html_doc = """
 </body>
 </html>
 """
+
+def unique_words(sentence):
+    """
+    From Artem Rudenko's Blog
+    http://artemrudenko.wordpress.com/2013/04/17/python-getting-unique-words-from-text/
+    """
+    print sentence
+    return set(sentence.translate(None, punctuation).lower().split())
 
 word_corpus = set()
 sentence_corpus = [] #
@@ -55,12 +64,11 @@ for word in open("20.txt").read().split():
       english_tag, german_tag = row.find_all('font')[:2]
       en = ''.join(english_tag.findAll(text=True))
       de = ''.join(german_tag.findAll(text=True))
-      print en
-      word_corpus.add(word for word in en.split())
+      word_corpus = word_corpus.union(unique_words(en))
       sentence_corpus.append((en, de))
   except Exception, e:
     print e
 
-print ", ".join([w for w in word_corpus])
+print ", ".join(word_corpus)
 print
-print sentence_corpus
+#print sentence_corpus
