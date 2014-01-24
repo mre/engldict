@@ -36,8 +36,10 @@ def unique_words(sentence):
     From Artem Rudenko's Blog
     http://artemrudenko.wordpress.com/2013/04/17/python-getting-unique-words-from-text/
     """
-    print sentence
-    return set(sentence.translate(None, punctuation).lower().split())
+    exclude = set(punctuation)
+    sentence = ''.join(ch for ch in sentence if ch not in exclude)
+    unique = set(sentence.lower().split())
+    return unique
 
 word_corpus = set()
 sentence_corpus = [] #
@@ -69,6 +71,8 @@ for word in open("20.txt").read().split():
   except Exception, e:
     print e
 
+
+print len(word_corpus)
 print ", ".join(word_corpus)
 print
 #print sentence_corpus
