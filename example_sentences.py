@@ -8,8 +8,20 @@ import urllib2
 # or if you're using BeautifulSoup4:
 from bs4 import BeautifulSoup
 from string import punctuation
+from collections import namedtuple
 
+from peewee import *
+database = SqliteDatabase('vocabulary.db')  # Create a database instance.
 
+class Vocabulary(Model):
+    word = CharField()
+    en = CharField()
+    de = CharField()
+    level = IntegerField()
+
+    class Meta:
+        # this model uses the in-memory database we just created
+        database = database
 
 test_html_doc = """
 <html>
@@ -41,11 +53,25 @@ def unique_words(sentence):
     unique = set(sentence.lower().split())
     return unique
 
+
+def best_match(sentences):
+  """
+  Heuristic to select the "best" sentence from a pool of candidates.
+  The shorter the words in a sentence and the sentence as a whole, the better it is.
+  """
+  # Take the shortest three sentences
+  shortest = sorted(sentences, key = lambda s: len(s))[:3]
+  # Order by longest word in sentence
+  simplest = sorted(shortest, key=lambda s: max(len(w) for w in s))
+  return simplest[0]
+
 word_corpus = set()
-sentence_corpus = [] #
+sentence_corpus = []
+Sentence = namedtuple('Sentence', 'en de')
 
 # Get example sentences for the n most common english words
-for word in open("20.txt").read().split():
+frequent_words = open("0-2000.txt").read().split()
+for word in frequent_words:
   if word in word_corpus:
     # We already have an example sentence for this word.
     continue
@@ -57,9 +83,9 @@ for word in open("20.txt").read().split():
 
   # Make an API call and extract all example sentences.
   try:
-    soup = BeautifulSoup(test_html_doc)
-    #url = 'http://www.vokaboly.de/bs/index.php?q={}&submit=Suchen&lang=en'.format(word)
-    #soup = BeautifulSoup(urllib2.urlopen(url).read())
+    #soup = BeautifulSoup(test_html_doc)
+    url = 'http://www.vokaboly.de/bs/index.php?q={}&submit=Suchen&lang=en'.format(word)
+    soup = BeautifulSoup(urllib2.urlopen(url).read())
     content = soup('table')[1]
     rows = content.find_all('tr')[1:]
     for row in rows:
@@ -67,12 +93,22 @@ for word in open("20.txt").read().split():
       en = ''.join(english_tag.findAll(text=True))
       de = ''.join(german_tag.findAll(text=True))
       word_corpus = word_corpus.union(unique_words(en))
-      sentence_corpus.append((en, de))
+      sentence_corpus.append(Sentence(en, de))
   except Exception, e:
     print e
 
+print "Word corpus:", ", ".join(word_corpus)
 
-print len(word_corpus)
-print ", ".join(word_corpus)
-print
-#print sentence_corpus
+# Find a "good" sentence for each word
+# and store it inside the database.
+
+# Silently recreate vocabulary database
+Vocabulary.drop_table(True)
+Vocabulary.create_table()
+for word in frequent_words:
+  matching_sentences = [s for s in sentence_corpus if word in s.en.split(" ")]
+  if matching_sentences:
+    best = best_match(matching_sentences)
+    print "Adding '", word, "': ", best.en, best.de
+    entry = Vocabulary(word=word, en = best.en, de = best.de, level=0)
+    entry.save()
