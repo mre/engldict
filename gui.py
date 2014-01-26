@@ -8,6 +8,7 @@ class Gui(wx.App):
     self.frame = Frame(None, title = "Vocabulary Trainer")
     self.frame.CenterOnScreen()
     self.frame.Show()
+    #self.frame.Layout()
     return True
 
 class Frame(wx.Frame):
@@ -15,6 +16,7 @@ class Frame(wx.Frame):
   def __init__(self, *args, **kwargs):
     wx.Frame.__init__(self, *args, **kwargs)
     self.panel = MainPanel(self)
+    self.Fit()
 
 
 class MainPanel(wx.Panel):
@@ -31,6 +33,7 @@ class MainPanel(wx.Panel):
 
     # Set the panels main Sizer
     self.SetSizer(self.main_sizer)
+    self.Fit()
 
   def createSizer(self):
     """ Create Main sizer """
@@ -52,31 +55,38 @@ class MainPanel(wx.Panel):
       txt = txt.replace(word, highlight)
     return fancy_render(txt)
 
-  def question_button(self, txt, word, size=(200,200)):
+  def question_button(self, txt, word, size=(150,150)):
     btn = GenBitmapTextButton(self, bitmap=self.render(txt, word), label="\n", size=size)
     btn.SetBackgroundColour('#c2e6f8')
     return btn
 
-  def answer_button(self, txt, size=(200,200)):
+  def answer_button(self, txt, size=(150,150)):
     btn = GenBitmapTextButton(self, bitmap=self.render(txt), label="\n", size=size)
     btn.SetBackgroundColour('#fcff9c')
     return btn
+
+  def chunks(self, s, n):
+    """Produce `n`-character chunks from `s`."""
+    for start in range(0, len(s), n):
+        yield s[start:start+n]
 
   def createButtons(self):
     """ Create buttons to be used in game """
     # Create grid sizer for buttons
     self.btn_sizer = wx.GridSizer(rows=4, cols=0, vgap=5, hgap=5)
-    
+
     # Create buttons
     size = (200,200)
     # Use bitmap buttons in case we want to add a nice icon later on
     cards = []
     for card in range(8):
       word = "nice"
-      txt ="Use bitmap buttons in case\n we want to add a\n nice icon later on"
+      txt = "Use bitmap buttons in case we want to add a nice icon later on"
+      txt = "\n".join(self.chunks(txt, 18))
       cards.append(self.question_button(txt, word))
       cards.append(self.answer_button(txt))
     self.btn_sizer.AddMany(cards)
+    self.btn_sizer.Fit(self)
     #self.Bind(wx.EVT_BUTTON, self.onToggle, email)
 
     #self.btn1 = buttons.GenToggleButton(self,size=size, style=wx.NO_BORDER|wx.ALIGN_CENTRE)
